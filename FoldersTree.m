@@ -296,7 +296,7 @@
 		int nextChildId = (node == rootNode) ? [[Database sharedDatabase] firstFolderId] : [[node folder] firstChildId];
 		while (nextChildId > 0)
 		{
-			unsigned int listIndex = [listOfFolderIds indexOfObject:[NSNumber numberWithInt:nextChildId]];
+			NSUInteger listIndex = [listOfFolderIds indexOfObject:[NSNumber numberWithInt:nextChildId]];
 			if (listIndex == NSNotFound)
 			{
 				NSLog(@"Cannot find child with id %i for folder with id %i", nextChildId, [node nodeId]);
@@ -322,7 +322,7 @@
 		}
 		if (index < (int)[listOfFolders count])
 		{
-			NSLog(@"Missing children for folder with id %i", nextChildId, [node nodeId]);
+			NSLog(@"Missing children for folder with id %i: %d", nextChildId, [node nodeId]);
 			return NO;
 		}
 	}
@@ -535,7 +535,7 @@
 
 	if (count > 0u)
 	{
-		unsigned int index = [rowIndexes firstIndex];
+		NSUInteger index = [rowIndexes firstIndex];
 		while (index != NSNotFound)
 		{
 			TreeNode * node = [outlineView itemAtRow:index];

@@ -41,7 +41,8 @@
 @class ClickableProgressIndicator;
 @class SearchPanel;
 
-@interface AppController : NSObject <GrowlApplicationBridgeDelegate> 
+@interface AppController : NSObject <GrowlApplicationBridgeDelegate,
+	NSMenuDelegate,NSToolbarDelegate,NSWindowDelegate,NSSplitViewDelegate> 
 {
 	IBOutlet NSWindow * mainWindow;
 	IBOutlet ArticleController * articleController;

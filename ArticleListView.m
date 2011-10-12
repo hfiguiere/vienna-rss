@@ -152,7 +152,7 @@ static const int MA_Minimum_Article_Pane_Width = 80;
  * Make sure the article pane width isn't shrunk beyond a minimum width. Otherwise it looks
  * untidy.
  */
--(float)splitView:(NSSplitView *)sender constrainMinCoordinate:(float)proposedMin ofSubviewAt:(int)offset
+-(CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset
 {
 	return (sender == splitView2 && offset == 0) ? MA_Minimum_ArticleList_Pane_Width : proposedMin;
 }
@@ -161,7 +161,7 @@ static const int MA_Minimum_Article_Pane_Width = 80;
  * Make sure that the article pane isn't shrunk beyond a minimum size otherwise the splitview
  * or controls within it start resizing odd.
  */
--(float)splitView:(NSSplitView *)sender constrainMaxCoordinate:(float)proposedMax ofSubviewAt:(int)offset
+-(CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset
 {
 	if (sender == splitView2 && offset == 0)
 	{
@@ -237,7 +237,7 @@ static const int MA_Minimum_Article_Pane_Width = 80;
  * Called from the webview when the user positions the mouse over an element. If it's a link
  * then echo the URL to the status bar like Safari does.
  */
--(void)webView:(WebView *)sender mouseDidMoveOverElement:(NSDictionary *)elementInformation modifierFlags:(unsigned int)modifierFlags
+-(void)webView:(WebView *)sender mouseDidMoveOverElement:(NSDictionary *)elementInformation modifierFlags:(NSUInteger)modifierFlags
 {
 	NSURL * url = [elementInformation valueForKey:@"WebElementLinkURL"];
 	[controller setStatusMessage:(url ? [url absoluteString] : @"") persist:NO];
@@ -1245,7 +1245,7 @@ static const int MA_Minimum_Article_Pane_Width = 80;
  * Datasource for the table view. Return the total number of rows we'll display which
  * is equivalent to the number of articles in the current folder.
  */
--(int)numberOfRowsInTableView:(NSTableView *)aTableView
+-(NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
 	return [[articleController allArticles] count];
 }
@@ -1254,13 +1254,13 @@ static const int MA_Minimum_Article_Pane_Width = 80;
  * Called by the table view to obtain the object at the specified column and row. This is
  * called often so it needs to be fast.
  */
--(id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+-(id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
 	Database * db = [Database sharedDatabase];
 	NSArray * allArticles = [articleController allArticles];
 	Article * theArticle;
 	
-	NSParameterAssert(rowIndex >= 0 && rowIndex < (int)[allArticles count]);
+	NSParameterAssert(rowIndex >= 0 && rowIndex < (NSInteger)[allArticles count]);
 	theArticle = [allArticles objectAtIndex:rowIndex];
 	NSString * identifier = [aTableColumn identifier];
 	if ([identifier isEqualToString:MA_Field_Read])
@@ -1551,7 +1551,7 @@ static const int MA_Minimum_Article_Pane_Width = 80;
 	if ([articleList numberOfSelectedRows] > 0)
 	{
 		NSIndexSet * rowIndexes = [articleList selectedRowIndexes];
-		unsigned int rowIndex = [rowIndexes firstIndex];
+		NSUInteger rowIndex = [rowIndexes firstIndex];
 
 		articleArray = [NSMutableArray arrayWithCapacity:[rowIndexes count]];
 		while (rowIndex != NSNotFound)

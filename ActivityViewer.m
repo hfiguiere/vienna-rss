@@ -121,7 +121,7 @@
 		[activityDetail setString:@""];
 	else
 	{
-		unsigned int rowToSelect = [allItems indexOfObject:selectedItem];
+		NSUInteger rowToSelect = [allItems indexOfObject:selectedItem];
 		if (rowToSelect != NSNotFound)
 		{
 			NSIndexSet * indexes = [NSIndexSet indexSetWithIndex:rowToSelect];

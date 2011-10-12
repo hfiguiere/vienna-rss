@@ -18,6 +18,7 @@
 //  limitations under the License.
 //
 
+#import <objc/runtime.h>
 #import "Message.h"
 #import "Database.h"
 #import "StringExtensions.h"
@@ -294,7 +295,7 @@ NSString * MA_Field_HasEnclosure = @"HasEnclosure";
 -(NSScriptObjectSpecifier *)objectSpecifier
 {
 	Folder * folder = [[Database sharedDatabase] folderFromID:[self folderId]];
-	unsigned index = [folder indexOfArticle:self];
+	NSUInteger index = [folder indexOfArticle:self];
 	if (index != NSNotFound)
 	{
 		NSScriptObjectSpecifier * containerRef = [folder objectSpecifier];
@@ -404,11 +405,11 @@ NSString * MA_Field_HasEnclosure = @"HasEnclosure";
 {
 	NSMutableString * newString = [NSMutableString stringWithString:theString];
 	BOOL hasOneTag = NO;
-	int tagStartIndex = 0;
+	NSInteger tagStartIndex = 0;
 
 	while ((tagStartIndex = [newString indexOfCharacterInString:'$' afterIndex:tagStartIndex]) != NSNotFound)
 	{
-		int tagEndIndex = [newString indexOfCharacterInString:'$' afterIndex:tagStartIndex + 1];
+		NSInteger tagEndIndex = [newString indexOfCharacterInString:'$' afterIndex:tagStartIndex + 1];
 		if (tagEndIndex == NSNotFound)
 			break;
 

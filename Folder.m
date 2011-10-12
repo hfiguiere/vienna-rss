@@ -142,9 +142,11 @@ static NSArray * iconArray = nil;
 		imagesCacheFolder = [[Preferences standardPreferences] imagesFolder];
 		if (![fileManager fileExistsAtPath:imagesCacheFolder isDirectory:&isDir])
 		{
-			if (![fileManager createDirectoryAtPath:imagesCacheFolder attributes:NULL])
+			NSError *error;
+			if (![fileManager createDirectoryAtPath:imagesCacheFolder withIntermediateDirectories:YES attributes:NULL error:&error])
 			{
-				NSLog(@"Cannot create image cache at %@. Will not cache folder images in this session.", imagesCacheFolder);
+				NSLog(@"Cannot create image cache at %@. Will not cache folder images in this session. %@", imagesCacheFolder, error);
+				[error release];
 				imagesCacheFolder = nil;
 			}
 			initializedFolderImagesArray = YES;
@@ -162,7 +164,7 @@ static NSArray * iconArray = nil;
 		
 		// Remember - not every file we find may be a valid image file. We use the filename as
 		// the key but check the extension too.
-		listOfFiles = [fileManager directoryContentsAtPath:imagesCacheFolder];
+		listOfFiles = [fileManager contentsOfDirectoryAtPath:imagesCacheFolder error:nil];
 		if (listOfFiles != nil)
 		{
 			NSString * fileName;
@@ -766,7 +768,7 @@ static NSArray * iconArray = nil;
 -(NSScriptObjectSpecifier *)objectSpecifier
 {
 	NSArray * folders = [[NSApp delegate] folders];
-	unsigned index = [folders indexOfObjectIdenticalTo:self];
+	NSUInteger index = [folders indexOfObjectIdenticalTo:self];
 	if (index != NSNotFound)
 	{
 		NSScriptObjectSpecifier *containerRef = [[NSApp delegate] objectSpecifier];
