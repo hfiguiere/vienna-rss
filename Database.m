@@ -144,7 +144,6 @@ static Database * _sharedDatabase = nil;
 		NSString * versionString = [[results rowAtIndex:0] stringForColumn:@"version"];
 		databaseVersion = [versionString intValue];
 	}
-	[results release];
 
 	// Save this thread handle to ensure we trap cases of calling the db on
 	// the wrong thread.
@@ -317,7 +316,6 @@ static Database * _sharedDatabase = nil;
 				[self executeSQLWithFormat:@"update folders set parent_id=%d where folder_id=%d", parentId, folderId];
 			}
 		}
-		[results release];
 		
 		[self commitTransaction];
 		NSLog(@"Updated database schema to version %d.", databaseVersion);
@@ -394,7 +392,6 @@ static Database * _sharedDatabase = nil;
 	{
 		newFoldersTreeSortMethod = [[[sortResults rowAtIndex:0] stringForColumn:@"folder_sort"] intValue];
 	}
-	[sortResults release];
 	[[Preferences standardPreferences] setFoldersTreeSortMethod:newFoldersTreeSortMethod];
 	
 	// Register for notifications of change in folders tree sort method.
@@ -508,7 +505,7 @@ static Database * _sharedDatabase = nil;
 -(int)executeSQL:(NSString *)sqlStatement
 {
 	[self verifyThreadSafety];
-	[[sqlDatabase performQuery:sqlStatement] release];
+	[sqlDatabase performQuery:sqlStatement];
 	return [sqlDatabase lastError];
 }
 
@@ -545,7 +542,6 @@ static Database * _sharedDatabase = nil;
 	[self verifyThreadSafety];
 	SQLResult * result = [sqlDatabase performQueryWithFormat:@"update info set last_opened='%@'", [NSDate date]];
 	readOnly = (result == nil);
-	[result release];
 }
 
 /* countOfUnread
@@ -770,7 +766,6 @@ static Database * _sharedDatabase = nil;
 		// Add this new folder to our internal cache
 		Folder * folder = [self folderFromID:folderId];
 		[folder setFeedURL:url];
-		[results release];
 	}
 	return folderId;
 }
@@ -825,7 +820,6 @@ static Database * _sharedDatabase = nil;
 			[self verifyThreadSafety];
 			SQLResult * siblings = [sqlDatabase performQueryWithFormat:@"select folder_id from folders where parent_id=%d and next_sibling=0", parentId];
 			predecessorId = (siblings && [siblings rowCount]) ? [[[siblings rowAtIndex:0] stringForColumn:@"folder_id"] intValue] : 0;
-			[siblings release];			
 		}
 		if (predecessorId == 0)
 		{
@@ -907,7 +901,6 @@ static Database * _sharedDatabase = nil;
 	if (results)
 	{
 		newItemId = [sqlDatabase lastInsertRowId];
-		[results release];
 	}
 	
 	return newItemId;
@@ -992,7 +985,6 @@ static Database * _sharedDatabase = nil;
 		}
 		else
 			[self setFirstChild:[folder nextSiblingId] forFolder:[folder parentId]];
-		[results release];
 	}
 	
 	// For a smart folder, the next line is a no-op but it helpfully takes care of the case where a
@@ -1290,7 +1282,6 @@ static Database * _sharedDatabase = nil;
 	{
 		folderId = [[[results rowAtIndex:0] stringForColumn:@"first_folder"] intValue];
 	}
-	[results release];
 	return folderId;
 }
 
@@ -1460,7 +1451,6 @@ static Database * _sharedDatabase = nil;
 				hasenclosure_flag];
 			if (!results)
 				return NO;
-			[results release];
 			[self executeSQLWithFormat:@"insert into rss_guids (message_id, folder_id) values ('%@', %d)", preparedArticleGuid, folderID];
 			
 			// Add the article to the folder
@@ -1499,7 +1489,6 @@ static Database * _sharedDatabase = nil;
 					}
 					else
 						existingBody = @"";
-					[results release];
 				}
 				
 				isArticleRevised = ![existingBody isEqualToString:articleBody];
@@ -1528,7 +1517,6 @@ static Database * _sharedDatabase = nil;
 					preparedArticleGuid];
 				if (!results)
 					return NO;
-				[results release];
 				
 				[existingArticle setTitle:articleTitle];
 				[existingArticle setBody:articleBody];
@@ -1574,8 +1562,7 @@ static Database * _sharedDatabase = nil;
 		NSTimeInterval timeDiff = [[[NSCalendarDate calendarDate] dateByAddingYears:0 months:-monthDelta days:-dayDelta hours:0 minutes:0 seconds:0] timeIntervalSince1970];
 
 		[self verifyThreadSafety];
-		SQLResult * results = [sqlDatabase performQueryWithFormat:@"update messages set deleted_flag=1 where deleted_flag=0 and marked_flag=0 and read_flag=1 and date < %f", timeDiff];
-		[results release];
+		/*SQLResult * results = */[sqlDatabase performQueryWithFormat:@"update messages set deleted_flag=1 where deleted_flag=0 and marked_flag=0 and read_flag=1 and date < %f", timeDiff];
 	}
 }
 
@@ -1596,7 +1583,6 @@ static Database * _sharedDatabase = nil;
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"MA_Notify_FoldersUpdated" object:[NSNumber numberWithInt:[self trashFolderId]]];
 	}
-	[results release];
 }
 
 /* deleteArticle
@@ -1627,7 +1613,6 @@ static Database * _sharedDatabase = nil;
 					--countOfUnread;
 				}
 				[folder removeArticleFromCache:guid];
-				[results release];
 				return YES;
 			}
 		}
@@ -1663,7 +1648,6 @@ static Database * _sharedDatabase = nil;
 				[criteriaTree release];
 			}
 		}
-		[results release];
 		initializedSmartfoldersDict = YES;
 	}
 }
@@ -1775,7 +1759,6 @@ static Database * _sharedDatabase = nil;
 					searchFolder = [folder retain];
 			}
 		}
-		[results release];
 
 		// Load all RSS folders and add them to the list.
 		results = [sqlDatabase performQuery:@"select * from rss_folders"];
@@ -1798,7 +1781,6 @@ static Database * _sharedDatabase = nil;
 				[folder setUsername:username];
 			}
 		}
-		[results release];
 
 		// Fix the childUnreadCount for every parent		
 		for (Folder * folder in [foldersDict objectEnumerator])
@@ -1943,7 +1925,6 @@ static Database * _sharedDatabase = nil;
 				countOfUnread += diff;
 			}
 		}
-		[results release];
 	}
 	return YES;
 }
@@ -2221,7 +2202,6 @@ static Database * _sharedDatabase = nil;
 					[newArray addObject:[ArticleReference makeReferenceFromGUID:guid inFolder:folderId]];
 				}
 			}
-			[results release];
 		}
 	}
 	return newArray;
@@ -2319,7 +2299,6 @@ static Database * _sharedDatabase = nil;
 	}
 
 	// Deallocate
-	[results release];
 	return newArray;
 }
 
@@ -2363,7 +2342,6 @@ static Database * _sharedDatabase = nil;
 			countOfUnread -= count;
 			[self setFolderUnreadCount:folder adjustment:-count];
 		}
-		[results release];
 		result = YES;
 	}
 	return result;
@@ -2398,7 +2376,6 @@ static Database * _sharedDatabase = nil;
 				countOfUnread += adjustment;
 				[self setFolderUnreadCount:folder adjustment:adjustment];
 			}
-			[results release];
 		}
 	}
 }
@@ -2454,12 +2431,10 @@ static Database * _sharedDatabase = nil;
 	{
 		if ([results rowCount] > 0)
 		{
-			[results release];
 			return NO;
 		}
 		else
 		{
-			[results release];
 			return YES;
 		}
 	}
@@ -2490,7 +2465,6 @@ static Database * _sharedDatabase = nil;
 			}
 		}
 		
-		[results release];
 	}
 	
 	return articleGuids;

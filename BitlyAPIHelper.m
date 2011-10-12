@@ -55,7 +55,7 @@ static NSString * BitlyApiBaseUrl = @"http://api.bit.ly/%@?version=2.0.1&login=%
 	NSHTTPURLResponse* urlResponse = nil;  	
 	NSError *error = [[[NSError alloc] init] autorelease];  
 	NSData * data = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&error];	
-	
+	[request release];
 	// If the response is OK, use Vienna's XML parser stuff to get the data we need.
 	if ([urlResponse statusCode] >= 200 && [urlResponse statusCode] < 300)
 	{

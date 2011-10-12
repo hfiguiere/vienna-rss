@@ -312,7 +312,7 @@
 /* allocAndStartProgressIndicator:
  * Allocate a new progress indicator and start it animating.
  */
--(NSProgressIndicator *)allocAndStartProgressIndicator
+-(NSProgressIndicator *)createAndStartProgressIndicator
 {
 	// Allocate and initialize the spinning progress indicator.
 	NSRect progressRect = NSMakeRect(0, 0, PROGRESS_INDICATOR_DIMENSION, PROGRESS_INDICATOR_DIMENSION);

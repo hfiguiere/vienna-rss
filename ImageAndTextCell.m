@@ -199,7 +199,7 @@
 	{
 		NSProgressIndicator *progressIndicator = [item progressIndicator];
 		if (!progressIndicator)
-			progressIndicator = [item allocAndStartProgressIndicator];
+			progressIndicator = [item createAndStartProgressIndicator];
 
 		NSRect progressIndicatorFrame;
 

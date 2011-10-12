@@ -94,10 +94,10 @@ static void sqlite3_regexp(sqlite3_context *DB, int argc, sqlite3_value **argv)
 {
 	if (sqlite3_open( [mPath fileSystemRepresentation], &mDatabase) == SQLITE_OK)
 	{
-		[[self performQuery:@"pragma cache_size=2000;"] release];
-		[[self performQuery:@"pragma default_cache_size=30000;"] release];
-		[[self performQuery:@"pragma temp_store=1;"] release];
-		[[self performQuery:@"pragma auto_vacuum=0;"] release];
+		[self performQuery:@"pragma cache_size=2000;"];
+		[self performQuery:@"pragma default_cache_size=30000;"];
+		[self performQuery:@"pragma temp_store=1;"];
+		[self performQuery:@"pragma auto_vacuum=0;"];
 
 		if (sqlite3_create_function(mDatabase, "regexp", 2, SQLITE_UTF8, NULL, sqlite3_regexp, NULL, NULL) == SQLITE_OK)
 			return YES;
@@ -208,7 +208,7 @@ static void LogElapsedTime( NSString * query, double startTime )
 	LogElapsedTime( inQuery, startTime );
 #endif
 
-	return sqlResult;
+	return [sqlResult autorelease];
 }
 
 -(SQLResult*)performQueryWithFormat:(NSString*)inFormat, ...

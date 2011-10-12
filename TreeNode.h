@@ -58,7 +58,7 @@
 -(BOOL)canHaveChildren;
 -(NSComparisonResult)folderNameCompare:(TreeNode *)otherObject;
 
--(NSProgressIndicator *)allocAndStartProgressIndicator;
+-(NSProgressIndicator *)createAndStartProgressIndicator;
 -(void)stopAndReleaseProgressIndicator;
 -(NSProgressIndicator *)progressIndicator;
 -(void)setProgressIndicator:(NSProgressIndicator *)inProgressIndicator;
